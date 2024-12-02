@@ -1,62 +1,44 @@
 <template>
-  <div class="events">
-    <EventCard v-for="event in events" :key="event.id" :event="event"/> 
+  <div>
+    <Header />
+    <h2>Top Stories </h2>
+    <StoryList :stories="stories" />
   </div>
 </template>
 
 <script>
-import EventCard from '@/components/EventCard.vue';
+import Header from '../components/Header.vue';
+import StoryList from '../components/StoryList.vue';
+import axios from 'axios';
 
-  export default {
-    name: 'Home',
-    components: {
-      EventCard
-    },
-
-    data() {
-      return{
-        events: [{
-          id: 532348,
-          category: 'animal welfare',
-          title: 'Cat Adoptation Day',
-          description: 'Find your new feline friend at this event',
-          location: 'Meow Town',
-          date: 'January 6, 2025',
-          time: '12:00',
-          petsAllowed: true,
-          organization: 'Kat Laydee'
-        },
-        {
-          id: 4582797,
-          category: 'food',
-          title: 'Community Gardening',
-          description: 'Join us as we tend to the community edible plants.',
-          location: 'Flora City',
-          date: 'March 14, 2022',
-          time: '10:00',
-          petsAllowed: true,
-          organizer: 'Fern Pollin'
-        },
-        {
-          id: 8419988,
-          category: 'sustainability',
-          title: 'Beach Cleanup',
-          description: 'Help pick up trash along the shore.',
-          location: 'Playa Del Carmen',
-          date: 'July 22, 2022',
-          time: '11:00',
-          petsAllowed: false,
-          organizer: 'Carey Wales'
-        }]
-      }
-    }
-  }
+export default {
+  name: 'Home',
+  components: { Header, StoryList },
+  data() {
+    return {
+      stories: [],
+    };
+  },
+  async created() {
+    const { data } = await axios.get(
+      'https://hacker-news.firebaseio.com/v0/topstories.json'
+    );
+    const storyIds = data.slice(0, 30);
+    this.stories = await Promise.all(
+      storyIds.map(async (id) => {
+        const { data } = await axios.get(
+          `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+        );
+        return data;
+      })
+    );
+  },
+};
 </script>
 
-<style scoped>
-.events {
-  display: flex;
-  flex-direction: column;
+<style scoped> 
+h2 {
   text-align: center;
+  margin-top: 20px;
 }
 </style>
