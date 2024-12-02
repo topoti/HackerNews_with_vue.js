@@ -8,16 +8,13 @@
   </ul>
 </template>
 
-<script>
+<script setup>
 import StoryItem from './StoryItem.vue';
+import { defineProps } from 'vue';
 
-export default {
-  name: 'StoryList',
-  components: { StoryItem },
-  props: {
-    stories: Array,
-  },
-};
+const props = defineProps({
+  stories: Array
+})
 </script>
 
 <style scoped>

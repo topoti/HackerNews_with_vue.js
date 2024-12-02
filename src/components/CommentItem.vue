@@ -7,18 +7,16 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, defineProps, onMounted } from 'vue';
 import axios from 'axios';
 
-export default {
-  name: 'CommentItem',
-  props: {
-    comment: Object,
-  },
+const props = defineProps({
+  comment: Object
+})
 
-  computed: {
-    timeAgo() {
-      const seconds = Math.floor(Date.now() / 1000 - this.comment.time);
+const timeAgo = computed(() => {
+  const seconds = Math.floor(Date.now() / 1000 - props.comment.time);
       const intervals = {
         year: 31536000,
         month: 2592000,
@@ -32,20 +30,20 @@ export default {
         if (interval > 0) return `${interval} ${key}${interval > 1 ? 's' : ''} ago`;
       }
       return 'just now';
-    },
-  },
- 
-  async created() {
-    if (this.comment.kids) {
-        this.comment.kids.map(async (id) => {
-          const { data } = await axios.get(
-            `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-          );
-          return data;
-        })
-    }
-  },
-};
+})
+
+const fetchComment = async() => {
+  if(props.comment.kids) {
+    props.comment.kids.map(async (id) => {
+      const { data } = await axios.get(
+         `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+      )
+      return data
+    })
+  }
+}
+
+onMounted(fetchComment)
 </script>
 
 <style scoped>

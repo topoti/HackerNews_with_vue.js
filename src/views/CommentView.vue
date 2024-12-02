@@ -13,46 +13,47 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
 import Header from '../components/Header.vue';
 import CommentList from '../components/CommentList.vue';
 import axios from 'axios';
 
-export default {
-  name: 'CommentView',
-  components: { Header, CommentList },
-  data() {
-    return {
-      story: null,
-      comments: [],
-      loading: true,
-    };
-  },
-  async created() {
-    const { id } = this.$route.params;
-    try {
-      const { data } = await axios.get(
-        `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-      );
-      this.story = data;
+const story = ref(null)
+const comments = ref([])
+const loading = ref(true)
+const route = useRoute()
 
-      if (data.kids) {
-        this.comments = await Promise.all(
-          data.kids.map(async (commentId) => {
-            const { data } = await axios.get(
-              `https://hacker-news.firebaseio.com/v0/item/${commentId}.json`
-            );
-            return data;
-          })
-        );
-      }
-    } catch (error) {
-      console.error('Error loading comments:', error);
-    } finally {
-      this.loading = false;
+const fetchComment = async() => {
+  const { id } = route.params
+  try {
+    const { data } = await axios.get(
+       `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+    )
+    story.value = data
+
+    if(data.kids) {
+      comments.value = await Promise.all(
+        data.kids.map(async (commentId) => {
+          const { data } = await axios.get(
+             `https://hacker-news.firebaseio.com/v0/item/${commentId}.json`
+          )
+          return data
+        })
+      )
     }
-  },
-};
+  }
+
+  catch(error) {
+    console.error('Error loading comment:', error)
+  }
+  finally {
+    loading.value = false
+  }
+}
+
+onMounted(fetchComment)
 </script>
 
 <style scoped>

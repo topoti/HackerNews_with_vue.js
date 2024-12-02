@@ -5,13 +5,12 @@
   </li>
 </template>
 
-<script>
-export default {
-  name: 'StoryItem',
-  props: {
-    story: Object,
-  },
-};
+<script setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  story: Object
+})
 </script>
 
 <style scoped>

@@ -6,34 +6,30 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue'
 import Header from '../components/Header.vue';
 import StoryList from '../components/StoryList.vue';
 import axios from 'axios';
 
-export default {
-  name: 'Home',
-  components: { Header, StoryList },
-  data() {
-    return {
-      stories: [],
-    };
-  },
-  async created() {
-    const { data } = await axios.get(
-      'https://hacker-news.firebaseio.com/v0/topstories.json'
-    );
-    const storyIds = data.slice(0, 30);
-    this.stories = await Promise.all(
-      storyIds.map(async (id) => {
-        const { data } = await axios.get(
-          `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-        );
-        return data;
-      })
-    );
-  },
-};
+const stories = ref([])
+
+const fetchStories = async() => {
+  const { data } = await axios.get(
+    'https://hacker-news.firebaseio.com/v0/topstories.json'
+  )
+  const storyIds = data.slice(0, 20)
+  stories.value = await Promise.all(
+    storyIds.map(async (id)=> {
+      const { data } = await axios.get(
+         `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+      )
+      return data
+    })
+  )
+}
+
+onMounted(fetchStories)
 </script>
 
 <style scoped> 

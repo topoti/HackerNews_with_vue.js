@@ -11,24 +11,22 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import Header from '../components/Header.vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
-export default {
-  name: 'UserView',
-  components: { Header },
-  data() {
-    return {
-      user: null,
-    };
-  },
-  async created() {
-    const { id } = this.$route.params;
-    const { data } = await axios.get(
-      `https://hacker-news.firebaseio.com/v0/user/${id}.json`
-    );
-    this.user = data;
-  },
-};
+const user = ref(null)
+const route = useRoute()
+
+const fetchUser = async() => {
+  const { id } = route.params
+  const { data } = await axios.get(
+    `https://hacker-news.firebaseio.com/v0/user/${id}.json`
+  )
+  user.value = data
+}
+
+onMounted(fetchUser)
 </script>

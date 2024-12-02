@@ -6,16 +6,13 @@
   </ul>
 </template>
 
-<script>
+<script setup>
+import { defineProps } from 'vue';
 import CommentItem from './CommentItem.vue';
 
-export default {
-  name: 'CommentList',
-  components: { CommentItem },
-  props: {
-    comments: Array,
-  },
-};
+const props = defineProps({
+  comments: Array
+})
 </script>
 
 <style scoped>

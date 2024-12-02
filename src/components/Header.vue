@@ -2,8 +2,6 @@
   <header class="header">
     <nav>
       <h1>Hacker News</h1>
-      <!-- <router-link to="/">Top Stories</router-link>  -->
-      <!-- <router-link :to="{ name: 'BestStories'}">Best Stories</router-link> -->
       <ul class="nav-links">
         <li><a href="/">Top Stories</a></li>
         <li><a href="/best">Best Stories</a></li>
@@ -15,11 +13,7 @@
   </header>
 </template>
 
-<script>
-import { RouterLink, RouterView } from 'vue-router';
-export default {
-  name: 'Header',
-};
+<script setup>
 </script>
 
 <style scoped>

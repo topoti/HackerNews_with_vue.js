@@ -13,24 +13,22 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import Header from '../components/Header.vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
-export default {
-  name: 'StoryView',
-  components: { Header },
-  data() {
-    return {
-      story: null,
-    };
-  },
-  async created() {
-    const { id } = this.$route.params;
-    const { data } = await axios.get(
-      `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-    );
-    this.story = data;
-  },
-};
+const story = ref(null)
+const route = useRoute()
+ 
+const fetchStoryView = async() => {
+  const { id } = route.params
+  const { data } = await axios.get(
+    `https://hacker-news.firebaseio.com/v0/item/${id}.json`
+  )
+  story.value = data
+}
+
+onMounted(fetchStoryView)
 </script>
