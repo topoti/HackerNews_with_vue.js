@@ -9,7 +9,6 @@
 
 <script setup>
 import { computed, defineProps, onMounted } from 'vue';
-import axios from 'axios';
 
 const props = defineProps({
   comment: Object
@@ -31,19 +30,6 @@ const timeAgo = computed(() => {
       }
       return 'just now';
 })
-
-const fetchComment = async() => {
-  if(props.comment.kids) {
-    props.comment.kids.map(async (id) => {
-      const { data } = await axios.get(
-         `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-      )
-      return data
-    })
-  }
-}
-
-onMounted(fetchComment)
 </script>
 
 <style scoped>
