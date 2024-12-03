@@ -1,18 +1,28 @@
 <template>
-  <div>
-    <p v-html="comment.text" class="comment-text"></p>
-    <p class="comment-meta">
-      <strong>{{ comment.by }}</strong> | {{ timeAgo }}
+  <div class="comment">
+    <p>
+      <strong>{{ comment.by }}</strong> <span>{{ timeAgo }}</span>
     </p>
+    <p v-html="comment.text"></p>
+    <div class="replies" v-if="comment.kids && replies.length > 0">
+      <h4>Replies:</h4>
+      <CommentItem
+        v-for="reply in replies"
+        :key="reply.id"
+        :comment="reply"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, defineProps, onMounted } from 'vue';
+import axios from 'axios';
+import { ref, onMounted, defineProps, computed } from 'vue';
 
 const props = defineProps({
   comment: Object
 })
+const replies = ref([])
 
 const timeAgo = computed(() => {
   const seconds = Math.floor(Date.now() / 1000 - props.comment.time);
@@ -30,14 +40,32 @@ const timeAgo = computed(() => {
       }
       return 'just now';
 })
+
+const fetchReplies = async() => {
+  if(props.comment.kids && props.comment.kids.length > 0) {
+    replies.value = await Promise.all(
+      props.comment.kids.map(async (kidId) => {
+        const { data } = await axios.get(
+            `https://hacker-news.firebaseio.com/v0/item/${kidId}.json`
+          );
+          return data;
+      })
+    )
+  }
+}
+onMounted(fetchReplies)
 </script>
 
 <style scoped>
-.comment-text {
-  margin: 0;
+.comment {
+  margin: 10px 0;
+  padding: 10px;
+  border-left: 2px solid #ddd;
 }
-.comment-meta {
-  font-size: 0.9em;
-  color: #666;
+.comment p {
+  margin: 5px 0;
+}
+.replies {
+  margin-left: 20px;
 }
 </style>

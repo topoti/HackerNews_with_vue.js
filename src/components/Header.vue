@@ -3,7 +3,7 @@
     <nav>
       <h1>Hacker News</h1>
       <ul class="nav-links">
-        <li><a href="/">Top Stories</a></li>
+        <li ><a href="/">Top Stories</a></li>
         <li><a href="/best">Best Stories</a></li>
         <li><a href="/new">New Stories</a></li>
         <li><a href="/ask">Ask Stories</a></li>
@@ -44,7 +44,7 @@
 .nav-links a:hover {
   text-decoration: underline;
 }
-.nav-links li:focus {
-  background: bisque;
+.nav-links li a:focus {
+  background-color: #42b983;
 }
 </style>
