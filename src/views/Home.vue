@@ -2,34 +2,14 @@
   <div>
     <Header />
     <h2>Top Stories </h2>
-    <StoryList :stories="stories" />
+    <Pagination endpoint="https://hacker-news.firebaseio.com/v0/topstories.json" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import Header from '../components/Header.vue';
-import StoryList from '../components/StoryList.vue';
-import axios from 'axios';
+import Pagination from '@/components/Pagination.vue';
 
-const stories = ref([])
-
-const fetchStories = async() => {
-  const { data } = await axios.get(
-    'https://hacker-news.firebaseio.com/v0/topstories.json'
-  )
-  const storyIds = data.slice(0, 20)
-  stories.value = await Promise.all(
-    storyIds.map(async (id)=> {
-      const { data } = await axios.get(
-         `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-      )
-      return data
-    })
-  )
-}
-
-onMounted(fetchStories)
 </script>
 
 <style scoped> 
