@@ -13,13 +13,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import Header from '../components/Header.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 
-const story = ref(null)
+interface Story {
+  id: number
+  title: string
+  by: string
+  score: number
+  descendants: number
+  text: string
+}
+
+const story = ref< Story | null > (null)
 const route = useRoute()
  
 const fetchStoryView = async() => {

@@ -6,13 +6,18 @@
   </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineProps } from 'vue';
 import CommentItem from './CommentItem.vue';
 
-const props = defineProps({
-  comments: Array
-})
+interface Comments {
+  id: number
+}
+
+const props = defineProps<{
+  comments: Comments[]; 
+}>();
+
 </script>
 
 <style scoped>

@@ -2,13 +2,13 @@
   <div>
     <Header />
     <h2>Top Stories </h2>
-    <Pagination endpoint="https://hacker-news.firebaseio.com/v0/topstories.json" />
+    <FetchStories endpoint="https://hacker-news.firebaseio.com/v0/topstories.json" />
   </div>
 </template>
 
 <script setup>
+import FetchStories from '@/components/FetchStories.vue';
 import Header from '../components/Header.vue';
-import Pagination from '@/components/Pagination.vue';
 
 </script>
 

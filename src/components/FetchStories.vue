@@ -1,20 +1,35 @@
 <template>
   <div>
     <StoryList :stories="paginatedStories" />
-    <div class="pagination">
+    <div v-if="loading">
+      <h2>Loading Stories...</h2>
+    </div>
+    <div v-else-if="loading === false">
+      <div class="pagination">
       <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
       <button @click="nextPage" :disabled="currentPage === totalPages">
         Next
       </button>
     </div>
+    </div>
+    
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import axios from "axios";
 import StoryList from "./StoryList.vue";
 import { ref, defineProps, computed, onMounted } from "vue";
+
+interface Stories {
+  id: Number
+  title: string
+  by: string
+  score: number,
+  descendants: number,
+  time: number
+}
 
 const props = defineProps({
   endpoint: {
@@ -26,8 +41,9 @@ const props = defineProps({
     default: 20,
   },
 });
+const loading = ref(true)
 const allStoryIds = ref([]);
-const paginatedStories = ref([]);
+const paginatedStories = ref< Stories[] > ([])
 const currentPage = ref(1);
 const totalPages = ref(0);
 
@@ -68,6 +84,9 @@ const fetchStories = async() => {
   catch(error) {
     console.error('Error fatching stories:', error)
   }
+  finally {
+    loading.value = false
+  }
 }
 
 const nextPage = () => {
@@ -89,6 +108,9 @@ onMounted(fetchStories)
 </script>
 
 <style scoped>
+.loading {
+  text-align: center;
+}
 .pagination {
   display: flex;
   justify-content: center;

@@ -1,16 +1,28 @@
 <template>
   <li class="story-item">
-    <a :href="`/story/${story.id}`">{{ story.title }}</a>
-    <p>{{ story.score }} points by <a :href="`/user/${story.by}`">{{ story.by }}</a> | <a :href="`item/${story.id}`"> {{ story.descendants }} Comments</a> | Created at {{ new Date(story.time * 1000).toLocaleString() }} </p>
+    <a :href="`${story.url}`">{{ story.title }}</a>
+    <p>{{ story.score }} points by <a :href="`/user/${story.by}`">{{ story.by }}</a> | <a :href="`item/${story.id}`"> {{ story.descendants }} Comments</a> | Created {{ ConvertTime(story.time) }} ago </p>
   </li>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineProps } from 'vue';
+import ConvertTime from './GlobalFunction/ConvertTime.js' 
 
-const props = defineProps({
-  story: Object
-})
+interface StoryValue {
+  id: Number
+  title: string
+  by: string
+  score: number,
+  descendants: number,
+  time: number
+  url:string
+}
+
+const props = defineProps<{
+  story: StoryValue;
+}>();
+ 
 </script>
 
 <style scoped>

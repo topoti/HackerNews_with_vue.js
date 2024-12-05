@@ -1,50 +1,48 @@
 <template>
   <div class="comment">
     <p>
-      <strong>{{ comment.by }}</strong> <span>{{ timeAgo }}</span>
+      <strong>{{ comment.by }}</strong> <span>{{ ConvertTime(comment.time) }}</span>
     </p>
     <p v-html="comment.text"></p>
-    <div class="replies" v-if="comment.kids && replies.length > 0">
-      <h4>Replies:</h4>
+    <div>
+      <button @click="replyButton = !replyButton">Replies</button>
+      <div class="replies" v-if="comment.kids && replies.length > 0">
+      <div v-if="replyButton === true">
       <CommentItem
         v-for="reply in replies"
         :key="reply.id"
         :comment="reply"
       />
     </div>
+    </div>
+    </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import axios from 'axios';
-import { ref, onMounted, defineProps, computed } from 'vue';
+import { ref, onMounted, defineProps, computed, Comment } from 'vue';
+import ConvertTime from './GlobalFunction/ConvertTime.js' 
 
-const props = defineProps({
-  comment: Object
-})
-const replies = ref([])
+interface Comment {
+  id: number
+  time: number
+  by: string
+  text: string,
+  kids?: number[]
+}
 
-const timeAgo = computed(() => {
-  const seconds = Math.floor(Date.now() / 1000 - props.comment.time);
-      const intervals = {
-        year: 31536000,
-        month: 2592000,
-        week: 604800,
-        day: 86400,
-        hour: 3600,
-        minute: 60,
-      };
-      for (const key in intervals) {
-        const interval = Math.floor(seconds / intervals[key]);
-        if (interval > 0) return `${interval} ${key}${interval > 1 ? 's' : ''} ago`;
-      }
-      return 'just now';
-})
+const props = defineProps<{
+  comment: Comment
+}>()
+
+const replyButton = ref(false)
+const replies = ref< Comment[] > ([])
 
 const fetchReplies = async() => {
   if(props.comment.kids && props.comment.kids.length > 0) {
     replies.value = await Promise.all(
-      props.comment.kids.map(async (kidId) => {
+      props.comment.kids.map(async (kidId: number) => {
         const { data } = await axios.get(
             `https://hacker-news.firebaseio.com/v0/item/${kidId}.json`
           );

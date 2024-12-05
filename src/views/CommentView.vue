@@ -13,15 +13,30 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
 import Header from '../components/Header.vue';
 import CommentList from '../components/CommentList.vue';
 import axios from 'axios';
 
-const story = ref(null)
-const comments = ref([])
+interface Story {
+  id: number
+  title: string
+  by: string
+  score: number
+  descendants: number
+}
+
+interface Comment {
+  id: number
+  by: string
+  text: string
+  time: number
+  kids?: number[]
+}
+const story = ref< Story | null > (null)
+const comments = ref< Comment[]> ([])
 const loading = ref(true)
 const route = useRoute()
 
@@ -35,7 +50,7 @@ const fetchComment = async() => {
 
     if(data.kids) {
       comments.value = await Promise.all(
-        data.kids.map(async (commentId) => {
+        data.kids.map(async (commentId: number) => {
           const { data } = await axios.get(
              `https://hacker-news.firebaseio.com/v0/item/${commentId}.json`
           )

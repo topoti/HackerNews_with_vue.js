@@ -8,13 +8,18 @@
   </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import StoryItem from './StoryItem.vue';
 import { defineProps } from 'vue';
 
-const props = defineProps({
-  stories: Array
-})
+interface Story {
+  id: number
+}
+
+const props = defineProps<{
+  stories: Story[]; 
+}>();
+
 </script>
 
 <style scoped>
