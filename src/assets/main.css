@@ -36,3 +36,15 @@ a {
   overflow-x: auto;
   font-size: 9pt;
 }
+
+/* Heading line above lists such as "Stories from …" or "pg's comments". */
+.page-heading {
+  margin: 0 4px 10px;
+  color: var(--hn-grey);
+  font-size: 10pt;
+  font-weight: normal;
+}
+
+.page-heading a {
+  color: #000;
+}

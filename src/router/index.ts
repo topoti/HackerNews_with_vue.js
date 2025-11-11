@@ -20,13 +20,59 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: ListView, meta: { kind: 'top' } },
     { path: '/news', name: 'news', component: ListView, meta: { kind: 'top' } },
-    { path: '/newest', name: 'newest', component: ListView, meta: { kind: 'new', title: 'New Links' } },
-    { path: '/best', name: 'best', component: ListView, meta: { kind: 'best', title: 'Top Links' } },
+    {
+      path: '/newest',
+      name: 'newest',
+      component: ListView,
+      meta: { kind: 'new', title: 'New Links' },
+    },
+    {
+      path: '/best',
+      name: 'best',
+      component: ListView,
+      meta: { kind: 'best', title: 'Top Links' },
+    },
     { path: '/ask', name: 'ask', component: ListView, meta: { kind: 'ask', title: 'Ask' } },
     { path: '/show', name: 'show', component: ListView, meta: { kind: 'show', title: 'Show' } },
     { path: '/jobs', name: 'jobs', component: ListView, meta: { kind: 'job', title: 'Jobs' } },
     { path: '/item', name: 'item', component: () => import('@/views/ItemView.vue') },
     { path: '/user', name: 'user', component: () => import('@/views/UserView.vue') },
+    {
+      path: '/submitted',
+      name: 'submitted',
+      component: () => import('@/views/SubmittedView.vue'),
+      meta: { title: 'Submissions' },
+    },
+    {
+      path: '/threads',
+      name: 'threads',
+      component: () => import('@/views/ThreadsView.vue'),
+      meta: { title: 'Threads' },
+    },
+    {
+      path: '/newcomments',
+      name: 'newcomments',
+      component: () => import('@/views/NewCommentsView.vue'),
+      meta: { title: 'New Comments' },
+    },
+    {
+      path: '/front',
+      name: 'front',
+      component: () => import('@/views/PastView.vue'),
+      meta: { title: 'Past' },
+    },
+    {
+      path: '/from',
+      name: 'from',
+      component: () => import('@/views/FromView.vue'),
+      meta: { title: 'Submissions' },
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('@/views/SearchView.vue'),
+      meta: { title: 'Search' },
+    },
 
     // Paths used by earlier versions of this app.
     { path: '/new', redirect: '/newest' },

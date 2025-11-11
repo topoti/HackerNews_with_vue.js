@@ -6,7 +6,10 @@
       <span class="title">
         <a v-if="item.url" :href="item.url" rel="noreferrer">{{ item.title }}</a>
         <router-link v-else :to="itemLink">{{ item.title }}</router-link>
-        <span v-if="site" class="site"> ({{ site }})</span>
+        <span v-if="site" class="site">
+          (<router-link :to="{ path: '/from', query: { site } }">{{ site }}</router-link
+          >)</span
+        >
       </span>
       <div class="subtext">
         <template v-if="!isJob">
@@ -76,6 +79,14 @@ const comments = computed(() => {
 .site {
   color: var(--hn-grey);
   font-size: 8pt;
+}
+
+.title .site a {
+  color: var(--hn-grey);
+}
+
+.title .site a:hover {
+  text-decoration: underline;
 }
 
 .subtext {

@@ -5,18 +5,24 @@
       <div class="head">
         <template v-if="hidden">{{ item.deleted ? '[deleted]' : '[flagged]' }} </template>
         <template v-else>
-          <router-link :class="{ op: item.by === op }" :to="{ path: '/user', query: { id: item.by } }">{{
-            item.by
-          }}</router-link>
+          <router-link
+            :class="{ op: item.by === op }"
+            :to="{ path: '/user', query: { id: item.by } }"
+            >{{ item.by }}</router-link
+          >
           {{ ' ' }}
         </template>
-        <router-link :to="{ path: '/item', query: { id: item.id } }">{{ timeAgo(item.time) }}</router-link>
+        <router-link :to="{ path: '/item', query: { id: item.id } }">{{
+          timeAgo(item.time)
+        }}</router-link>
         <template v-for="link in navLinks" :key="link.label">
           {{ ' | ' }}<router-link :to="link.to">{{ link.label }}</router-link>
         </template>
         <template v-if="story">
           {{ ' | on: ' }}
-          <router-link :to="{ path: '/item', query: { id: story.id } }">{{ story.title }}</router-link>
+          <router-link :to="{ path: '/item', query: { id: story.id } }">{{
+            story.title
+          }}</router-link>
         </template>
         {{ ' ' }}
         <button

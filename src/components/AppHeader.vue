@@ -16,6 +16,8 @@
 <script setup lang="ts">
 const links = [
   { to: '/newest', label: 'new' },
+  { to: '/front', label: 'past' },
+  { to: '/newcomments', label: 'comments' },
   { to: '/ask', label: 'ask' },
   { to: '/show', label: 'show' },
   { to: '/jobs', label: 'jobs' },
