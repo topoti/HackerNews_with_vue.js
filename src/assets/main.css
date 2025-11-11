@@ -1,4 +1,9 @@
-/* @import './base.css'; */
+:root {
+  --hn-orange: #ff6600;
+  --hn-bg: #f6f6ef;
+  --hn-grey: #828282;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -6,9 +11,28 @@
 }
 
 body {
-  font:
-    15px/1.4 "Poppins",
-    sans-serif;
-  color: #333;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10pt;
+  color: #000;
+  background: #fff;
 }
 
+a {
+  color: inherit;
+}
+
+/* Comment and about text from the API. */
+.hn-text p {
+  margin-top: 0.6em;
+}
+
+.hn-text a {
+  color: #000;
+}
+
+.hn-text pre {
+  margin: 0.6em 0;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  font-size: 9pt;
+}

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Header />
     <div v-if="story">
       <h2>{{ story.title }}</h2>
       <p>{{ story.score }} points by <a :href="`/user/${story.by}`">{{ story.by }}</a></p>
@@ -16,7 +15,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router';
-import Header from '../components/Header.vue';
 import CommentList from '../components/CommentList.vue';
 import axios from 'axios';
 
@@ -41,7 +39,7 @@ const loading = ref(true)
 const route = useRoute()
 
 const fetchComment = async() => {
-  const { id } = route.params
+  const { id } = route.query
   try {
     const { data } = await axios.get(
        `https://hacker-news.firebaseio.com/v0/item/${id}.json`

@@ -1,63 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Jobs from '@/views/Jobs.vue'
-import NotFound from '@/views/NotFound.vue'
-import StoryView from '@/views/StoryView.vue'
-import UserView from '@/views/UserView.vue'
-import BestStories from '@/views/BestStories.vue'
-import NewStories from '@/views/NewStories.vue'
-import AskStories from '@/views/AskStories.vue'
-import CommentView from '@/views/CommentView.vue'
+import type { ListKind } from '@/types/hn'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    kind?: ListKind
+  }
+}
+
+const ListView = () => import('@/views/ListView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(_to, _from, savedPosition) {
+    return savedPosition ?? { top: 0 }
+  },
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
-    },
-    {
-      path: '/story/:id',
-      name: 'StoryView',
-      component: StoryView
-    },
-    {
-      path: '/user/:id',
-      name: 'UserView',
-      component: UserView
-    },
-    {
-      path: '/item/:id',
-      name: 'CommentView',
-      component: CommentView
-    },
-    {
-      path: '/best',
-      name: 'BestStories',
-      component: BestStories
-    },
-    {
-      path: '/new',
-      name: 'NewStories',
-      component: NewStories
-    },
-    {
-      path: '/ask',
-      name: 'AskStories',
-      component: AskStories
-    },
-    {
-      path: '/jobs',
-      name: 'Jobs',
-      component: Jobs
-    },
+    { path: '/', name: 'home', component: ListView, meta: { kind: 'top' } },
+    { path: '/news', name: 'news', component: ListView, meta: { kind: 'top' } },
+    { path: '/newest', name: 'newest', component: ListView, meta: { kind: 'new', title: 'New Links' } },
+    { path: '/best', name: 'best', component: ListView, meta: { kind: 'best', title: 'Top Links' } },
+    { path: '/ask', name: 'ask', component: ListView, meta: { kind: 'ask', title: 'Ask' } },
+    { path: '/show', name: 'show', component: ListView, meta: { kind: 'show', title: 'Show' } },
+    { path: '/jobs', name: 'jobs', component: ListView, meta: { kind: 'job', title: 'Jobs' } },
+    { path: '/item', name: 'item', component: () => import('@/views/CommentView.vue') },
+    { path: '/user', name: 'user', component: () => import('@/views/UserView.vue') },
+
+    // Paths used by earlier versions of this app.
+    { path: '/new', redirect: '/newest' },
+    { path: '/item/:id', redirect: (to) => ({ path: '/item', query: { id: to.params.id } }) },
+    { path: '/story/:id', redirect: (to) => ({ path: '/item', query: { id: to.params.id } }) },
+    { path: '/user/:id', redirect: (to) => ({ path: '/user', query: { id: to.params.id } }) },
+
     {
       path: '/:catchAll(.*)',
       name: 'NotFound',
-      component: NotFound
-    }
+      component: () => import('@/views/NotFound.vue'),
+      meta: { title: 'Not Found' },
+    },
   ],
+})
+
+router.afterEach((to) => {
+  document.title = to.meta.title ? `${to.meta.title} | Hacker News` : 'Hacker News'
 })
 
 export default router
