@@ -12,8 +12,10 @@ const ListView = () => import('@/views/ListView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior(_to, _from, savedPosition) {
-    return savedPosition ?? { top: 0 }
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) return savedPosition
+    if (to.hash) return { el: to.hash, top: 8 }
+    return { top: 0 }
   },
   routes: [
     { path: '/', name: 'home', component: ListView, meta: { kind: 'top' } },
@@ -23,7 +25,7 @@ const router = createRouter({
     { path: '/ask', name: 'ask', component: ListView, meta: { kind: 'ask', title: 'Ask' } },
     { path: '/show', name: 'show', component: ListView, meta: { kind: 'show', title: 'Show' } },
     { path: '/jobs', name: 'jobs', component: ListView, meta: { kind: 'job', title: 'Jobs' } },
-    { path: '/item', name: 'item', component: () => import('@/views/CommentView.vue') },
+    { path: '/item', name: 'item', component: () => import('@/views/ItemView.vue') },
     { path: '/user', name: 'user', component: () => import('@/views/UserView.vue') },
 
     // Paths used by earlier versions of this app.
