@@ -19,8 +19,7 @@
         </template>
         <router-link :to="itemLink">{{ timeAgo(item.time) }}</router-link>
         <template v-if="!isJob">
-          {{ ' | ' }}
-          <router-link :to="itemLink">{{ comments }}</router-link>
+          | <router-link :to="itemLink">{{ comments }}</router-link>
         </template>
       </div>
     </div>
