@@ -1,33 +1,45 @@
-# vue-mastery-realworld
+# Hacker News with Vue.js
 
-This template should help get you started developing with Vue 3 in Vite.
+A read-only clone of [Hacker News](https://news.ycombinator.com/news) built with Vue 3, TypeScript, Vite, Vue Router and Pinia. It follows HN's layout and URLs, and reads from the official [HN Firebase API](https://github.com/HackerNews/API) and the [Algolia HN Search API](https://hn.algolia.com/api).
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## Setup
 
 ```sh
 npm install
+npm run dev        # start the dev server
+npm run build      # type-check and build for production
+npm run preview    # serve the production build
+npm test           # run unit and component tests (Vitest)
+npm run lint       # ESLint
+npm run format     # Prettier
 ```
 
-### Compile and Hot-Reload for Development
+## Pages
 
-```sh
-npm run dev
+| URL | Page | Data |
+|---|---|---|
+| `/`, `/news` | Top stories | Firebase `topstories` |
+| `/newest`, `/best`, `/ask`, `/show`, `/jobs` | Story lists | Firebase |
+| `/item?id=` | Story, poll or comment with its thread | Firebase |
+| `/user?id=` | User profile | Firebase |
+| `/submitted?id=`, `/threads?id=` | A user's submissions and comments | Algolia |
+| `/newcomments` | Newest comments | Algolia |
+| `/front?day=YYYY-MM-DD` | Past: top stories of a day | Algolia |
+| `/from?site=` | Stories from a domain | Algolia |
+| `/search?q=` | Story search | Algolia |
+
+Lists show 30 items per page; `?p=2` selects the page, as on HN.
+
+## Layout
+
+```
+src/
+  api/          hn.ts (Firebase), algolia.ts (search)
+  stores/       items.ts: caches items and lists so Back is instant
+  composables/  usePaged.ts: ?p= paging with loading and error state
+  components/   StoryRow, StoryList, CommentItem, CommentTree, CommentFeed, ...
+  views/        one view per page above
+  utils/        format.ts (timeAgo, domain, ...), sanitize.ts (DOMPurify)
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+Comment threads load one level at a time, in batches of 30, and collapsed threads are not fetched. All HTML from the APIs is sanitized before rendering.

@@ -1,63 +1,96 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Jobs from '@/views/Jobs.vue'
-import NotFound from '@/views/NotFound.vue'
-import StoryView from '@/views/StoryView.vue'
-import UserView from '@/views/UserView.vue'
-import BestStories from '@/views/BestStories.vue'
-import NewStories from '@/views/NewStories.vue'
-import AskStories from '@/views/AskStories.vue'
-import CommentView from '@/views/CommentView.vue'
+import type { ListKind } from '@/types/hn'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: string
+    kind?: ListKind
+  }
+}
+
+const ListView = () => import('@/views/ListView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) return savedPosition
+    if (to.hash) return { el: to.hash, top: 8 }
+    return { top: 0 }
+  },
   routes: [
+    { path: '/', name: 'home', component: ListView, meta: { kind: 'top' } },
+    { path: '/news', name: 'news', component: ListView, meta: { kind: 'top' } },
     {
-      path: '/',
-      name: 'home',
-      component: Home,
-    },
-    {
-      path: '/story/:id',
-      name: 'StoryView',
-      component: StoryView
-    },
-    {
-      path: '/user/:id',
-      name: 'UserView',
-      component: UserView
-    },
-    {
-      path: '/item/:id',
-      name: 'CommentView',
-      component: CommentView
+      path: '/newest',
+      name: 'newest',
+      component: ListView,
+      meta: { kind: 'new', title: 'New Links' },
     },
     {
       path: '/best',
-      name: 'BestStories',
-      component: BestStories
+      name: 'best',
+      component: ListView,
+      meta: { kind: 'best', title: 'Top Links' },
+    },
+    { path: '/ask', name: 'ask', component: ListView, meta: { kind: 'ask', title: 'Ask' } },
+    { path: '/show', name: 'show', component: ListView, meta: { kind: 'show', title: 'Show' } },
+    { path: '/jobs', name: 'jobs', component: ListView, meta: { kind: 'job', title: 'Jobs' } },
+    { path: '/item', name: 'item', component: () => import('@/views/ItemView.vue') },
+    { path: '/user', name: 'user', component: () => import('@/views/UserView.vue') },
+    {
+      path: '/submitted',
+      name: 'submitted',
+      component: () => import('@/views/SubmittedView.vue'),
+      meta: { title: 'Submissions' },
     },
     {
-      path: '/new',
-      name: 'NewStories',
-      component: NewStories
+      path: '/threads',
+      name: 'threads',
+      component: () => import('@/views/ThreadsView.vue'),
+      meta: { title: 'Threads' },
     },
     {
-      path: '/ask',
-      name: 'AskStories',
-      component: AskStories
+      path: '/newcomments',
+      name: 'newcomments',
+      component: () => import('@/views/NewCommentsView.vue'),
+      meta: { title: 'New Comments' },
     },
     {
-      path: '/jobs',
-      name: 'Jobs',
-      component: Jobs
+      path: '/front',
+      name: 'front',
+      component: () => import('@/views/PastView.vue'),
+      meta: { title: 'Past' },
     },
+    {
+      path: '/from',
+      name: 'from',
+      component: () => import('@/views/FromView.vue'),
+      meta: { title: 'Submissions' },
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('@/views/SearchView.vue'),
+      meta: { title: 'Search' },
+    },
+
+    // Paths used by earlier versions of this app.
+    { path: '/new', redirect: '/newest' },
+    { path: '/item/:id', redirect: (to) => ({ path: '/item', query: { id: to.params.id } }) },
+    { path: '/story/:id', redirect: (to) => ({ path: '/item', query: { id: to.params.id } }) },
+    { path: '/user/:id', redirect: (to) => ({ path: '/user', query: { id: to.params.id } }) },
+
     {
       path: '/:catchAll(.*)',
       name: 'NotFound',
-      component: NotFound
-    }
+      component: () => import('@/views/NotFound.vue'),
+      meta: { title: 'Not Found' },
+    },
   ],
+})
+
+router.afterEach((to) => {
+  document.title = to.meta.title ? `${to.meta.title} | Hacker News` : 'Hacker News'
 })
 
 export default router
