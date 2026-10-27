@@ -1,5 +1,6 @@
 <template>
   <section>
+    <h2 class="page-heading">{{ HEADINGS[kind] }}</h2>
     <p v-if="kind === 'job'" class="banner">
       These are jobs at YC startups. See more at
       <a href="https://www.ycombinator.com/jobs">ycombinator.com/jobs</a>.
@@ -16,7 +17,6 @@
       :has-more="hasMore"
       :loading="loading"
       :error="error"
-      :ranked="kind !== 'job'"
       @retry="reload"
     />
   </section>
@@ -28,8 +28,18 @@ import { useRoute } from 'vue-router'
 import StoryList from '@/components/StoryList.vue'
 import { usePaged } from '@/composables/usePaged'
 import { useItemsStore } from '@/stores/items'
+import type { ListKind } from '@/types/hn'
 
 const PER_PAGE = 30
+
+const HEADINGS: Record<ListKind, string> = {
+  top: 'Top Stories',
+  best: 'Best Stories',
+  new: 'New Stories',
+  ask: 'Ask Stories',
+  show: 'Show Stories',
+  job: 'Jobs',
+}
 
 const route = useRoute()
 const store = useItemsStore()
@@ -51,11 +61,7 @@ const { page, items, hasMore, loading, error, reload } = usePaged(
 
 <style scoped>
 .banner {
-  margin: 0 0 10px 4px;
-  color: var(--hn-grey);
-}
-
-.banner a {
-  color: #000;
+  color: var(--muted);
+  text-align: center;
 }
 </style>

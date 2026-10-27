@@ -2,14 +2,15 @@
   <section>
     <h2 class="page-heading">
       Stories from {{ heading }}
-      <br />
-      Go back a
-      <router-link :to="dayLink({ days: -1 })">day</router-link>,
-      <router-link :to="dayLink({ months: -1 })">month</router-link>, or
-      <router-link :to="dayLink({ years: -1 })">year</router-link>.
-      <template v-if="canGoForward">
-        Go forward a <router-link :to="dayLink({ days: 1 })">day</router-link>.
-      </template>
+      <small>
+        Go back a
+        <router-link :to="dayLink({ days: -1 })">day</router-link>,
+        <router-link :to="dayLink({ months: -1 })">month</router-link>, or
+        <router-link :to="dayLink({ years: -1 })">year</router-link>.
+        <template v-if="canGoForward">
+          Go forward a <router-link :to="dayLink({ days: 1 })">day</router-link>.
+        </template>
+      </small>
     </h2>
     <StoryList
       :items="items"

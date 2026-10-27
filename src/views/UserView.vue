@@ -5,40 +5,17 @@
     </p>
     <p v-else-if="loading" class="status">Loading…</p>
     <p v-else-if="!user" class="status">No such user.</p>
-    <table v-else class="profile">
-      <tbody>
-        <tr>
-          <th>user:</th>
-          <td>{{ user.id }}</td>
-        </tr>
-        <tr>
-          <th>created:</th>
-          <td>{{ formatDate(user.created) }}</td>
-        </tr>
-        <tr>
-          <th>karma:</th>
-          <td>{{ user.karma }}</td>
-        </tr>
-        <tr>
-          <th>about:</th>
-          <td class="hn-text" v-html="sanitize(user.about)" />
-        </tr>
-        <tr>
-          <th />
-          <td class="links">
-            <router-link :to="{ path: '/submitted', query: { id: user.id } }"
-              >submissions</router-link
-            >
-          </td>
-        </tr>
-        <tr>
-          <th />
-          <td class="links">
-            <router-link :to="{ path: '/threads', query: { id: user.id } }">comments</router-link>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div v-else class="profile">
+      <h2>{{ user.id }}</h2>
+      <p>Created: {{ formatDate(user.created) }}</p>
+      <p>Karma: {{ user.karma }}</p>
+      <div v-if="user.about" class="about hn-text" v-html="sanitize(user.about)" />
+      <p class="links">
+        <router-link :to="{ path: '/submitted', query: { id: user.id } }">Submissions</router-link>
+        |
+        <router-link :to="{ path: '/threads', query: { id: user.id } }">Comments</router-link>
+      </p>
+    </div>
   </section>
 </template>
 
@@ -82,36 +59,35 @@ watch(id, load, { immediate: true })
 
 <style scoped>
 .profile {
-  margin: 0 4px;
-  border-spacing: 0 4px;
+  margin: 20px 0;
 }
 
-th {
-  padding-right: 8px;
-  color: var(--hn-grey);
-  font-weight: normal;
-  text-align: left;
-  vertical-align: top;
+.profile p {
+  margin-top: 4px;
 }
 
-td {
+.about {
+  margin-top: 10px;
   max-width: 80ch;
   overflow-wrap: anywhere;
 }
 
-.links a {
-  text-decoration: underline;
+.links {
+  margin-top: 10px;
 }
 
 .status {
-  margin: 10px 4px;
+  margin: 20px 0;
+  text-align: center;
 }
 
 .link {
-  border: 0;
-  background: none;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--accent);
+  color: white;
   font: inherit;
-  text-decoration: underline;
   cursor: pointer;
 }
 </style>

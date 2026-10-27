@@ -17,19 +17,34 @@
     </template>
 
     <template v-else>
-      <ul class="header">
-        <StoryRow :item="item" />
-      </ul>
-      <div v-if="item.text" class="text hn-text" v-html="sanitize(item.text)" />
-      <ul v-if="pollOptions.length" class="poll">
-        <li v-for="option in pollOptions" :key="option.id">
-          <div class="hn-text" v-html="sanitize(option.text)" />
-          <span class="points">{{ pluralize(option.score ?? 0, 'point') }}</span>
-        </li>
-      </ul>
-      <div class="comments">
-        <CommentTree v-if="item.kids" :ids="item.kids" :op="item.by" />
+      <div class="story">
+        <h2>
+          <a v-if="item.url" :href="item.url" rel="noreferrer">{{ item.title }}</a>
+          <template v-else>{{ item.title }}</template>
+        </h2>
+        <p class="meta">
+          <template v-if="item.type !== 'job'">
+            <strong>{{ item.score ?? 0 }}</strong> points by
+            <router-link :to="{ path: '/user', query: { id: item.by } }">{{ item.by }}</router-link>
+            |
+          </template>
+          Created {{ timeAgo(item.time) }}
+          <template v-if="site">
+            | <router-link :to="{ path: '/from', query: { site } }">{{ site }}</router-link>
+          </template>
+        </p>
+        <div v-if="item.text" class="text hn-text" v-html="sanitize(item.text)" />
+        <ul v-if="pollOptions.length" class="poll">
+          <li v-for="option in pollOptions" :key="option.id">
+            <div class="hn-text" v-html="sanitize(option.text)" />
+            <span class="points">{{ pluralize(option.score ?? 0, 'point') }}</span>
+          </li>
+        </ul>
       </div>
+      <h3 v-if="item.kids" class="comments-heading">
+        {{ pluralize(item.descendants ?? 0, 'Comment') }}
+      </h3>
+      <CommentTree v-if="item.kids" :ids="item.kids" :op="item.by" />
     </template>
   </section>
 </template>
@@ -39,10 +54,9 @@ import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import CommentItem from '@/components/CommentItem.vue'
 import CommentTree from '@/components/CommentTree.vue'
-import StoryRow from '@/components/StoryRow.vue'
 import { useItemsStore } from '@/stores/items'
 import type { Item } from '@/types/hn'
-import { pluralize } from '@/utils/format'
+import { domain, pluralize, timeAgo } from '@/utils/format'
 import { sanitize } from '@/utils/sanitize'
 
 const route = useRoute()
@@ -53,6 +67,7 @@ const item = ref<Item | null>(null)
 /** For a comment: the story at the top of its thread. */
 const story = ref<Item | null>(null)
 const pollOptions = ref<Item[]>([])
+const site = computed(() => domain(item.value?.url))
 const loading = ref(true)
 const error = ref(false)
 
@@ -98,18 +113,28 @@ watch(id, load, { immediate: true })
 </script>
 
 <style scoped>
-.header {
-  list-style: none;
+.story {
+  margin: 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+}
+
+.story h2 a {
+  color: inherit;
+}
+
+.meta {
+  margin-top: 4px;
 }
 
 .text {
-  margin: 10px 0 0 calc(3ch + 16px);
+  margin-top: 10px;
   max-width: 80ch;
 }
 
 .poll {
   list-style: none;
-  margin: 10px 0 0 calc(3ch + 16px);
+  margin-top: 10px;
 }
 
 .poll li {
@@ -117,23 +142,26 @@ watch(id, load, { immediate: true })
 }
 
 .points {
-  color: var(--hn-grey);
-  font-size: 7pt;
+  color: var(--muted);
+  font-size: 13px;
 }
 
-.comments {
-  margin-top: 16px;
+.comments-heading {
+  margin-top: 20px;
 }
 
 .status {
-  margin: 10px 4px;
+  margin: 20px 0;
+  text-align: center;
 }
 
 .link {
-  border: 0;
-  background: none;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--accent);
+  color: white;
   font: inherit;
-  text-decoration: underline;
   cursor: pointer;
 }
 </style>

@@ -14,24 +14,23 @@ const story: Item = {
   descendants: 0,
 }
 
-function render(item: Item, rank?: number) {
+function render(item: Item) {
   return mount(StoryRow, {
-    props: { item, rank },
+    props: { item },
     global: { stubs: { RouterLink: RouterLinkStub } },
   })
 }
 
 describe('StoryRow', () => {
-  it('renders an HN story row', () => {
-    const text = render(story, 31).text()
-    expect(text).toContain('31.')
+  it('renders a story item', () => {
+    const text = render(story).text().replace(/\s+/g, ' ')
     expect(text).toContain('A story')
     expect(text).toContain('(example.com)')
-    expect(text).toContain('1 point by pg 3 hours ago | discuss')
+    expect(text).toContain('1 point by pg | 0 Comments | Created 3 hours ago')
   })
 
-  it('counts comments once there are some', () => {
-    expect(render({ ...story, descendants: 12 }).text()).toContain('12 comments')
+  it('counts comments', () => {
+    expect(render({ ...story, descendants: 12 }).text()).toContain('12 Comments')
   })
 
   it('links text posts to their item page', () => {
@@ -43,7 +42,7 @@ describe('StoryRow', () => {
 
   it('shows only title, domain and age for jobs', () => {
     const text = render({ ...story, type: 'job', score: undefined, descendants: undefined }).text()
-    expect(text).not.toMatch(/point|comment|discuss|undefined/)
+    expect(text).not.toMatch(/point|comment|undefined/i)
     expect(text).toContain('3 hours ago')
   })
 })

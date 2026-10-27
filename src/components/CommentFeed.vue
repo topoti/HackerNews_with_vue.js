@@ -1,19 +1,21 @@
 <template>
   <div>
     <p v-if="error" class="status">
-      Couldn't load comments. <button class="link" @click="emit('retry')">Retry</button>
+      Couldn't load comments. <button class="retry" @click="emit('retry')">Retry</button>
     </p>
-    <p v-else-if="loading" class="status">Loading…</p>
+    <h2 v-else-if="loading" class="status">Loading Comments...</h2>
     <p v-else-if="items.length === 0" class="status">No comments.</p>
     <template v-else>
-      <CommentItem
-        v-for="{ comment, story } in items"
-        :key="comment.id"
-        :item="comment"
-        :story="story"
-        :parent="comment.parent ? { path: '/item', query: { id: comment.parent } } : undefined"
-      />
-      <MoreLink v-if="hasMore" :page="page" class="more" />
+      <ul class="feed">
+        <li v-for="{ comment, story } in items" :key="comment.id" class="comment-item">
+          <CommentItem
+            :item="comment"
+            :story="story"
+            :parent="comment.parent ? { path: '/item', query: { id: comment.parent } } : undefined"
+          />
+        </li>
+      </ul>
+      <PageNav :page="page" :has-more="hasMore" />
     </template>
   </div>
 </template>
@@ -21,7 +23,7 @@
 <script setup lang="ts">
 import type { FeedComment } from '@/api/algolia'
 import CommentItem from '@/components/CommentItem.vue'
-import MoreLink from '@/components/MoreLink.vue'
+import PageNav from '@/components/PageNav.vue'
 
 defineProps<{
   items: FeedComment[]
@@ -35,19 +37,29 @@ const emit = defineEmits<{ retry: [] }>()
 </script>
 
 <style scoped>
-.more {
-  margin-left: 14px;
+.feed {
+  list-style: none;
+}
+
+.comment-item {
+  margin: 10px 0;
+  border: 1px solid var(--border);
+  border-radius: 5px;
 }
 
 .status {
-  margin: 10px 4px;
+  margin: 20px 0;
+  text-align: center;
 }
 
-.link {
-  border: 0;
-  background: none;
+.retry {
+  margin-left: 6px;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--accent);
+  color: white;
   font: inherit;
-  text-decoration: underline;
   cursor: pointer;
 }
 </style>
