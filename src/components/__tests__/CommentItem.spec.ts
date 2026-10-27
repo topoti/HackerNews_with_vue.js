@@ -26,13 +26,13 @@ describe('CommentItem', () => {
     expect(html).not.toContain('<script>')
   })
 
-  it('collapses to [N more], counting replies, and expands again', async () => {
+  it('hides the comment and its replies, showing the count, and shows them again', async () => {
     const wrapper = render(comment, '<div class="comment"></div><div class="comment"></div>')
     const toggle = wrapper.find('button.toggle')
-    expect(toggle.text()).toBe('[–]')
+    expect(toggle.text()).toBe('Hide')
 
     await toggle.trigger('click')
-    expect(toggle.text()).toBe('[3 more]')
+    expect(toggle.text()).toBe('Show (3)')
     expect(wrapper.find('.text').exists()).toBe(false)
 
     await toggle.trigger('click')

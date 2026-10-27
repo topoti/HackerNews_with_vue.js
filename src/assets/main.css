@@ -1,7 +1,8 @@
 :root {
-  --hn-orange: #ff6600;
-  --hn-bg: #f6f6ef;
-  --hn-grey: #828282;
+  --accent: #ff6600;
+  --link: #0073e6;
+  --muted: #777;
+  --border: #ddd;
 }
 
 * {
@@ -11,14 +12,20 @@
 }
 
 body {
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 10pt;
-  color: #000;
+  font:
+    15px/1.4 'Poppins',
+    sans-serif;
+  color: #333;
   background: #fff;
 }
 
 a {
-  color: inherit;
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 /* Comment and about text from the API. */
@@ -26,25 +33,24 @@ a {
   margin-top: 0.6em;
 }
 
-.hn-text a {
-  color: #000;
-}
-
 .hn-text pre {
   margin: 0.6em 0;
   white-space: pre-wrap;
   overflow-x: auto;
-  font-size: 9pt;
+  font-size: 13px;
 }
 
-/* Heading line above lists such as "Stories from …" or "pg's comments". */
+/* Centered heading above lists such as "Top Stories" or "Comments by pg". */
 .page-heading {
-  margin: 0 4px 10px;
-  color: var(--hn-grey);
-  font-size: 10pt;
-  font-weight: normal;
+  margin: 20px 10px;
+  font-size: 1.5em;
+  text-align: center;
 }
 
-.page-heading a {
-  color: #000;
+.page-heading small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: normal;
 }

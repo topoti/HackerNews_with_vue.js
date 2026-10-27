@@ -1,68 +1,57 @@
 <template>
   <header class="header">
-    <router-link to="/" class="logo" aria-label="Hacker News home">Y</router-link>
     <nav>
-      <router-link to="/news" class="site-name">Hacker News</router-link>
-      <span class="links">
-        <template v-for="(link, i) in links" :key="link.to">
-          <span v-if="i > 0" class="sep"> | </span>
+      <h1><router-link to="/">Hacker News</router-link></h1>
+      <ul class="nav-links">
+        <li v-for="link in links" :key="link.to">
           <router-link :to="link.to">{{ link.label }}</router-link>
-        </template>
-      </span>
+        </li>
+      </ul>
     </nav>
   </header>
 </template>
 
 <script setup lang="ts">
 const links = [
-  { to: '/newest', label: 'new' },
-  { to: '/front', label: 'past' },
-  { to: '/newcomments', label: 'comments' },
-  { to: '/ask', label: 'ask' },
-  { to: '/show', label: 'show' },
-  { to: '/jobs', label: 'jobs' },
+  { to: '/news', label: 'Top Stories' },
+  { to: '/best', label: 'Best Stories' },
+  { to: '/newest', label: 'New Stories' },
+  { to: '/ask', label: 'Ask Stories' },
+  { to: '/show', label: 'Show Stories' },
+  { to: '/jobs', label: 'Jobs' },
+  { to: '/front', label: 'Past' },
+  { to: '/newcomments', label: 'Comments' },
 ]
 </script>
 
 <style scoped>
 .header {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px;
-  background: var(--hn-orange);
-}
-
-.logo {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #fff;
-  color: #fff;
-  font-weight: bold;
-  line-height: 16px;
+  background: var(--accent);
+  padding: 10px;
+  color: white;
   text-align: center;
-  text-decoration: none;
 }
 
-nav {
+h1 a {
+  color: white;
+}
+
+.nav-links {
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: 10px;
-  line-height: 1.4;
+  justify-content: center;
 }
 
-a {
-  color: #000;
-  text-decoration: none;
+.nav-links li {
+  margin: 0 10px;
 }
 
-.site-name {
+.nav-links a {
+  color: white;
+}
+
+.nav-links a.router-link-active {
   font-weight: bold;
-}
-
-.links a.router-link-active {
-  color: #fff;
 }
 </style>

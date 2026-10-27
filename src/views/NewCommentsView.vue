@@ -1,5 +1,6 @@
 <template>
   <section>
+    <h2 class="page-heading">New Comments</h2>
     <CommentFeed
       :items="items"
       :page="page"

@@ -1,11 +1,9 @@
 <template>
-  <div class="page">
-    <AppHeader />
-    <main>
-      <router-view />
-    </main>
-    <AppFooter />
-  </div>
+  <AppHeader />
+  <main>
+    <router-view />
+  </main>
+  <AppFooter />
 </template>
 
 <script setup lang="ts">
@@ -14,20 +12,9 @@ import AppFooter from '@/components/AppFooter.vue'
 </script>
 
 <style scoped>
-.page {
-  width: 85%;
-  margin: 8px auto;
-  background: var(--hn-bg);
-}
-
 main {
-  padding: 10px 0;
-}
-
-@media (max-width: 750px) {
-  .page {
-    width: 100%;
-    margin: 0;
-  }
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 </style>

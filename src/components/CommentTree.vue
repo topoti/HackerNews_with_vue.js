@@ -81,27 +81,31 @@ watch(
 
 <style scoped>
 .nested {
-  margin-left: 40px;
+  margin-left: 20px;
+}
+
+/* Top-level comments sit in bordered cards, replies nest inside them. */
+.tree:not(.nested) > .comment {
+  border: 1px solid var(--border);
+  border-radius: 5px;
 }
 
 .status,
 .more {
-  margin: 8px 0 0 14px;
-  color: var(--hn-grey);
-  font-size: 8pt;
+  margin: 8px 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .more {
-  border: 0;
-  background: none;
+  padding: 2px 8px;
   font-family: inherit;
-  text-decoration: underline;
   cursor: pointer;
 }
 
 @media (max-width: 750px) {
   .nested {
-    margin-left: 14px;
+    margin-left: 10px;
   }
 }
 </style>

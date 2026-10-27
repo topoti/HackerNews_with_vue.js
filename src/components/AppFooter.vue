@@ -1,16 +1,15 @@
 <template>
   <footer class="footer">
-    <nav>
-      <template v-for="(link, i) in links" :key="link.href">
-        <span v-if="i > 0"> | </span>
-        <a :href="link.href">{{ link.label }}</a>
-      </template>
-    </nav>
     <form class="search" role="search" @submit.prevent="search">
-      <label>
-        Search:
-        <input v-model="query" type="search" name="q" autocomplete="off" />
-      </label>
+      <input
+        v-model="query"
+        type="search"
+        name="q"
+        placeholder="Search stories"
+        aria-label="Search stories"
+        autocomplete="off"
+      />
+      <button type="submit">Search</button>
     </form>
   </footer>
 </template>
@@ -34,45 +33,36 @@ function search() {
   const q = query.value.trim()
   if (q) router.push({ path: '/search', query: { q } })
 }
-
-const HN = 'https://news.ycombinator.com'
-const links = [
-  { label: 'Guidelines', href: `${HN}/newsguidelines.html` },
-  { label: 'FAQ', href: `${HN}/newsfaq.html` },
-  { label: 'Lists', href: `${HN}/lists` },
-  { label: 'API', href: 'https://github.com/HackerNews/API' },
-  { label: 'Security', href: `${HN}/security.html` },
-  { label: 'Legal', href: 'https://www.ycombinator.com/legal/' },
-  { label: 'Apply to YC', href: 'https://www.ycombinator.com/apply/' },
-  { label: 'Contact', href: 'mailto:hn@ycombinator.com' },
-]
 </script>
 
 <style scoped>
 .footer {
-  border-top: 2px solid var(--hn-orange);
-  padding: 10px 4px 20px;
-  font-size: 8pt;
-  text-align: center;
-}
-
-.footer a {
-  color: #000;
-  text-decoration: none;
+  margin-top: 20px;
+  padding: 20px 16px;
+  border-top: 1px solid var(--border);
 }
 
 .search {
-  margin-top: 16px;
-  color: var(--hn-grey);
-  font-size: 10pt;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 
 .search input {
-  width: min(16em, 60vw);
+  width: min(20em, 60vw);
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
   font: inherit;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--accent);
+  color: white;
+  font: inherit;
+  cursor: pointer;
 }
 </style>
